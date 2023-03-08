@@ -3,7 +3,13 @@ import typescriptLogo from "./typescript.svg";
 import { setupCounter } from "./counter";
 import { HelloWorld } from "./helloWorld";
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+function main(): void {
+  const elm = document.querySelector<HTMLDivElement>("#app")
+  if (elm == null) {
+    throw TypeError("#app is nully")
+  }
+
+  elm.innerHTML = `
   <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -22,6 +28,12 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-customElements.define("hello-world", HelloWorld);
+  customElements.define("hello-world", HelloWorld);
+  const counter = document.querySelector<HTMLButtonElement>("#counter")
+  if (counter == null) {
+    throw TypeError("#counter is nully")
+  }
+  setupCounter(counter);
+}
 
-setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+main()
