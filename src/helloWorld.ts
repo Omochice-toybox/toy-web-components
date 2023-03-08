@@ -9,6 +9,8 @@ export class HelloWorld extends HTMLElement {
   attributeChangedCallback(prop: string, prev: string, next: string): void {
     if (prev === next) return;
     if (!Object.hasOwn(this, prop)) return;
+    // eslint-disable-next-line
+    // @ts-ignore: check by above
     this[prop] = next;
   }
 
@@ -18,19 +20,17 @@ export class HelloWorld extends HTMLElement {
 
   connectedCallback(): void {
     const shadow = this.attachShadow({ mode: "closed" })
+    const template = (<HTMLTemplateElement>document.getElementById("hello-world"))
+      ?.content
+      .cloneNode(true)
+    const message = `Hello ${this.name}`
 
-    shadow.innerHTML = `
-    <style>
-      p {
-        text-align: center;
-        font-weight: normal;
-        padding: 1em;
-        margin: 0 0 2em 0;
-        background-color: #eee;
-        border: 1px solid #666;
-      }
-    </style>
-    <p>Hello ${this.name}!</p>
-    `
+    Array.from(template.querySelectorAll(".sample-text") ?? [])
+      .forEach((e) => {
+        if (!(e instanceof Element)) return
+        e.textContent = message
+      })
+
+    shadow.append(template)
   }
 }
